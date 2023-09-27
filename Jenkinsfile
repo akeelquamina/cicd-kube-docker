@@ -72,7 +72,7 @@ pipeline {
             }
         }
 
-        stage()'Build Docker App Image') {
+        stage('Build Docker App Image') {
           steps {
             script {
               dockerImage = docker.build registry + ":V$BUILD_NUMBER"
