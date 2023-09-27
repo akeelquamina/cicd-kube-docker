@@ -7,7 +7,7 @@ pipeline {
     }
 */
     environment {
-        registry = "akeelquamina/vproapp"
+        registry = "akeelquamina/vprofileapp"
         registryCredential = 'dockerhub'
         ARTVERSION = "${env.BUILD_ID}"
     }
