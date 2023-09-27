@@ -97,7 +97,12 @@ pipeline {
           }  
         }
 
-        
+        stage('kubenetes Deploy'){
+         agent {label 'KOPS'}
+            steps {
+              sh "helm upgrade --install --force vprofile-stack helm/vprofilecharts --set appimage=${registry}:V${BUILD_NUMBER} --namespace prod"
+            }
+        }
     }    
 
 
