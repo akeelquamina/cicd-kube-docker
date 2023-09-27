@@ -7,18 +7,13 @@ pipeline {
     }
 */
     environment {
-      
+        registry = "akeelquamina/vproapp"
+        registryCredential = 'dockerhub'
         ARTVERSION = "${env.BUILD_ID}"
     }
 
     stages{
-
-        stage('Fetch Code') {
-            steps {
-                git branch: 'paac', url: 'https://github.com/devopshydclub/vprofile-project.git'
-            }
-        }
-        stage('BUILD'){
+         stage('BUILD'){
             steps {
                 sh 'mvn clean install -DskipTests'
             }
@@ -77,7 +72,33 @@ pipeline {
             }
         }
 
- 
+        stage()'Build Docker App Image') {
+          steps {
+            script {
+              dockerImage = docker.build registry + ":V$BUILD_NUMBER"
+            }
+          }
+        }
+
+        stage('Upload Image'){
+          steps{
+            script {
+              docker.withRegistry('', registryCredential) {
+                dockerImage.push("V$BUILD_NUMBER")
+                dockerImage.push('latest')
+              }
+            }
+          }    
+        }
+
+        stage('Remove Unused docker image'){
+          steps{
+            sh "docker rmi $registry:V$BUILD_NUMBER"
+          }  
+        }
+
+        
+    }    
 
 
 }
