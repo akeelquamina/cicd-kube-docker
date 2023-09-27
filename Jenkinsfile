@@ -80,7 +80,7 @@ pipeline {
           }
         }
 
-        stage('Upload Image'){
+        stage('Upload Image') {
           steps{
             script {
               docker.withRegistry('', registryCredential) {
@@ -91,13 +91,13 @@ pipeline {
           }    
         }
 
-        stage('Remove Unused docker image'){
+        stage('Remove Unused docker image') {
           steps{
             sh "docker rmi $registry:V$BUILD_NUMBER"
           }  
         }
 
-        stage('kubenetes Deploy'){
+        stage('kubenetes Deploy') {
          agent {label 'KOPS'}
             steps {
               sh "helm upgrade --install --force vprofile-stack helm/vprofilecharts --set appimage=${registry}:V${BUILD_NUMBER} --namespace prod"
